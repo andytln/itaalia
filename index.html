@@ -2,7 +2,7 @@
 <html lang="et">
 <head>
   <meta charset="UTF-8" />
-  <title>Itaalia keel – Kehaosad, numbrid, päevad ja suunad</title>
+  <title>Itaalia keel – Sõnavara ja test</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <!-- PWA & iOS asjad -->
@@ -17,14 +17,18 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 800px;
+      max-width: 900px;
       margin: 40px auto;
       padding: 20px;
       border: 1px solid #ccc;
       border-radius: 12px;
     }
-    h1, h2, h3 {
+    h1, h2, h3, h4 {
       text-align: center;
+    }
+    #main-nav {
+      text-align: center;
+      margin-bottom: 20px;
     }
     button {
       padding: 10px 16px;
@@ -37,9 +41,34 @@
     button:hover {
       background-color: #e0e0e0;
     }
-    #mode-select {
-      text-align: center;
+    #main-nav button {
+      min-width: 140px;
     }
+    .vocab-block {
+      margin-top: 24px;
+    }
+    .vocab-block h3 {
+      margin-bottom: 8px;
+    }
+    .vocab-block h4 {
+      margin-top: 12px;
+      margin-bottom: 4px;
+      text-align: left;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    /* Testi osa stiilid */
     #quiz-area {
       margin-top: 20px;
     }
@@ -59,19 +88,6 @@
     #feedback {
       margin-top: 12px;
       font-weight: bold;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: left;
-    }
-    th {
-      background-color: #f0f0f0;
     }
     #top-bar {
       display: flex;
@@ -96,50 +112,288 @@
   </style>
 </head>
 <body>
-  <h1>Itaalia keel – Kehaosad, numbrid, päevad ja suunad</h1>
+  <h1>Itaalia keel – sõnavara ja test</h1>
 
-  <div id="mode-select">
-    <p>Vali blokk, mida harjutada:</p>
-    <button id="mode-body">Kehaosad</button>
-    <button id="mode-numbers">Numbrid (1–100, sajad, tuhanded)</button>
-    <button id="mode-days">Päevad, kuud ja suunad</button>
+  <!-- ÜLEMINE VALIK: Sõnavara vs Test -->
+  <div id="main-nav">
+    <button id="btn-vocab" type="button">Sõnavara</button>
+    <button id="btn-quiz" type="button">Testi oskuseid</button>
   </div>
 
-  <div id="quiz-area" style="display:none;">
-    <div id="top-bar">
-      <button id="restart-btn">Kokkuvõte</button>
-      <div id="top-bar-title"><span id="mode-title"></span></div>
-      <button id="cancel-btn">Katkesta</button>
+  <!-- SÕNAVARA OSA -->
+  <div id="vocab-area">
+    <h2>Sõnavara</h2>
+
+    <!-- Numbrid -->
+    <div class="vocab-block">
+      <h3>Numbrid</h3>
+      <p style="text-align:center;">
+        1–20, seejärel valikud (20, 25, 30, 35, 40), seejärel kümnelised kuni 100 ning lõpuks sajad kuni 1000.
+      </p>
+      <table id="vocab-numbers">
+        <thead>
+          <tr>
+            <th>Eesti (number)</th>
+            <th>Itaalia (sõnana)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
-    <p id="instructions"></p>
+    <!-- Päevad, kuud, suunad -->
+    <div class="vocab-block">
+      <h3>Päevad, kuud ja suunad</h3>
 
-    <div id="estonian-word">Vajuta „Järgmine”</div>
+      <h4>Nädalapäevad (E–P)</h4>
+      <table id="vocab-weekdays">
+        <thead>
+          <tr>
+            <th>Eesti</th>
+            <th>Itaalia</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-    <label for="answer-input">
-      Sinu vastus itaalia keeles:
-    </label>
-    <input type="text" id="answer-input" autocomplete="off" />
+      <h4>Kuud (Jaanuar – Detsember)</h4>
+      <table id="vocab-months">
+        <thead>
+          <tr>
+            <th>Eesti</th>
+            <th>Itaalia</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-    <div>
-      <button id="voice-btn" type="button">🎤 Ütle vastus</button>
-      <span id="speech-status"></span>
+      <h4>Suunad ja liikumine</h4>
+      <table id="vocab-directions">
+        <thead>
+          <tr>
+            <th>Eesti</th>
+            <th>Itaalia</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
-    <br />
-
-    <button id="check-btn">Kontrolli</button>
-    <button id="next-btn">Järgmine</button>
-
-    <div id="feedback"></div>
-
-    <div id="last-result"></div>
+    <!-- Kehaosad -->
+    <div class="vocab-block">
+      <h3>Kehaosad (juustest varvasteni)</h3>
+      <table id="vocab-body">
+        <thead>
+          <tr>
+            <th>Eesti</th>
+            <th>Itaalia</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 
-  <div id="summary"></div>
+  <!-- TESTI OSA (sama loogika nagu enne, lihtsalt oma blokis) -->
+  <div id="quiz-section" style="display:none;">
+
+    <!-- Blokivalik testimiseks -->
+    <div id="mode-select">
+      <h2>Testi oskuseid</h2>
+      <p style="text-align:center;">Vali blokk, mida harjutada:</p>
+      <div style="text-align:center;">
+        <button id="mode-body">Kehaosad</button>
+        <button id="mode-numbers">Numbrid</button>
+        <button id="mode-days">Päevad, kuud ja suunad</button>
+      </div>
+    </div>
+
+    <!-- Päris testimine -->
+    <div id="quiz-area" style="display:none;">
+      <div id="top-bar">
+        <button id="restart-btn">Kokkuvõte</button>
+        <div id="top-bar-title"><span id="mode-title"></span></div>
+        <button id="cancel-btn">Katkesta</button>
+      </div>
+
+      <p id="instructions"></p>
+
+      <div id="estonian-word">Vajuta „Järgmine”</div>
+
+      <label for="answer-input">
+        Sinu vastus itaalia keeles:
+      </label>
+      <input type="text" id="answer-input" autocomplete="off" />
+
+      <div>
+        <button id="voice-btn" type="button">🎤 Ütle vastus</button>
+        <span id="speech-status"></span>
+      </div>
+
+      <br />
+
+      <button id="check-btn">Kontrolli</button>
+      <button id="next-btn">Järgmine</button>
+
+      <div id="feedback"></div>
+
+      <div id="last-result"></div>
+    </div>
+
+    <!-- Testi kokkuvõte -->
+    <div id="summary"></div>
+  </div>
 
   <script>
-    // -------- ANDMED (ITAALIA) --------
+    // ---------- ITAALIA NUMBRID ABIFUNKTSIOON ----------
+    function italianNumber(n) {
+      n = Number(n);
+      if (!Number.isInteger(n) || n <= 0 || n > 9999) return String(n);
+
+      const units = ["", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove"];
+      const teens = {
+        10: "dieci", 11: "undici", 12: "dodici", 13: "tredici", 14: "quattordici", 15: "quindici",
+        16: "sedici", 17: "diciassette", 18: "diciotto", 19: "diciannove"
+      };
+      const tensWords = {
+        2: "venti",
+        3: "trenta",
+        4: "quaranta",
+        5: "cinquanta",
+        6: "sessanta",
+        7: "settanta",
+        8: "ottanta",
+        9: "novanta"
+      };
+      const hundredsWords = {
+        1: "cento",
+        2: "duecento",
+        3: "trecento",
+        4: "quattrocento",
+        5: "cinquecento",
+        6: "seicento",
+        7: "settecento",
+        8: "ottocento",
+        9: "novecento"
+      };
+
+      if (n <= 9) return units[n];
+      if (n >= 10 && n < 20) return teens[n];
+
+      if (n < 100) {
+        const t = Math.floor(n / 10);
+        const u = n % 10;
+        let tensWord = tensWords[t];
+        if (u === 1 || u === 8) {
+          tensWord = tensWord.slice(0, -1); // venti -> ventuno/ventotto jne
+        }
+        return u === 0 ? tensWord : tensWord + units[u];
+      }
+
+      if (n === 100) return "cento";
+      if (n < 200) return "cento" + italianNumber(n - 100);
+
+      if (n < 1000) {
+        const h = Math.floor(n / 100);
+        const r = n % 100;
+        let prefix = hundredsWords[h];
+        if (r >= 80 && r < 90) {
+          prefix = prefix.replace(/o$/, "");
+        }
+        return r === 0 ? prefix : prefix + italianNumber(r);
+      }
+
+      if (n === 1000) return "mille";
+      if (n < 2000) return "mille" + (n === 1000 ? "" : italianNumber(n - 1000));
+
+      const thousands = Math.floor(n / 1000);
+      const rem = n % 1000;
+      const thousandsPart = italianNumber(thousands) + "mila";
+      return rem === 0 ? thousandsPart : thousandsPart + italianNumber(rem);
+    }
+
+    // ---------- SÕNAVARA ANDMED ----------
+
+    // Sõnavara – nädalapäevad
+    const vocabWeekdays = [
+      { et: "esmaspäev", it: "lunedì" },
+      { et: "teisipäev", it: "martedì" },
+      { et: "kolmapäev", it: "mercoledì" },
+      { et: "neljapäev", it: "giovedì" },
+      { et: "reede", it: "venerdì" },
+      { et: "laupäev", it: "sabato" },
+      { et: "pühapäev", it: "domenica" }
+    ];
+
+    // Sõnavara – kuud
+    const vocabMonths = [
+      { et: "jaanuar", it: "gennaio" },
+      { et: "veebruar", it: "febbraio" },
+      { et: "märts", it: "marzo" },
+      { et: "aprill", it: "aprile" },
+      { et: "mai", it: "maggio" },
+      { et: "juuni", it: "giugno" },
+      { et: "juuli", it: "luglio" },
+      { et: "august", it: "agosto" },
+      { et: "september", it: "settembre" },
+      { et: "oktoober", it: "ottobre" },
+      { et: "november", it: "novembre" },
+      { et: "detsember", it: "dicembre" }
+    ];
+
+    // Sõnavara – suunad
+    const vocabDirections = [
+      { et: "põhi", it: "nord" },
+      { et: "lõuna", it: "sud" },
+      { et: "ida", it: "est" },
+      { et: "lääs", it: "ovest" },
+      { et: "üles", it: "su" },
+      { et: "alla", it: "giù" },
+      { et: "vasakule", it: "a sinistra" },
+      { et: "paremale", it: "a destra" },
+      { et: "edasi", it: "avanti" },
+      { et: "tagasi", it: "indietro" }
+    ];
+
+    // Sõnavara – kehaosad (juustest varvasteni)
+    const vocabBody = [
+      { et: "juuksed", it: "i capelli" },
+      { et: "otsmik", it: "la fronte" },
+      { et: "kulm", it: "il sopracciglio" },
+      { et: "kulmud", it: "le sopracciglia" },
+      { et: "ripsmed", it: "le ciglia" },
+      { et: "silm", it: "l'occhio" },
+      { et: "silmad", it: "gli occhi" },
+      { et: "nina", it: "il naso" },
+      { et: "põsk", it: "la guancia" },
+      { et: "põsed", it: "le guance" },
+      { et: "suu", it: "la bocca" },
+      { et: "huuled", it: "le labbra" },
+      { et: "hammas", it: "il dente" },
+      { et: "hambad", it: "i denti" },
+      { et: "keel", it: "la lingua" },
+      { et: "lõug", it: "il mento" },
+      { et: "kael", it: "il collo" },
+      { et: "õlg", it: "la spalla" },
+      { et: "õlad", it: "le spalle" },
+      { et: "rindkere", it: "il petto" },
+      { et: "selg", it: "la schiena" },
+      { et: "kõht", it: "la pancia" },
+      { et: "meeste suguelund", it: "il pene" },
+      { et: "naiste suguelund", it: "la vagina" },
+      { et: "puus", it: "il fianco" },
+      { et: "käsi (õlast randmeni)", it: "il braccio" },
+      { et: "käsi (randmest allpool)", it: "la mano" },
+      { et: "sõrm", it: "il dito" },
+      { et: "sõrmed", it: "le dita" },
+      { et: "tagumik", it: "il sedere" },
+      { et: "jalg", it: "la gamba" },
+      { et: "põlv", it: "il ginocchio" },
+      { et: "pöid (jalg)", it: "il piede" },
+      { et: "varvas", it: "il dito del piede" }
+    ];
+
+    // ---------- TESTI ANDMED (SAMA LOOGIKA NAGU VAREM) ----------
 
     const bodyWords = [
       { et: "pea", it: ["testa", "la testa"] },
@@ -206,72 +460,6 @@
       { et: "tagasi", it: ["indietro", "torna indietro"] }
     ];
 
-    function italianNumber(n) {
-      n = Number(n);
-      if (!Number.isInteger(n) || n <= 0 || n > 9999) return String(n);
-
-      const units = ["", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove"];
-      const teens = {
-        10: "dieci", 11: "undici", 12: "dodici", 13: "tredici", 14: "quattordici", 15: "quindici",
-        16: "sedici", 17: "diciassette", 18: "diciotto", 19: "diciannove"
-      };
-      const tensWords = {
-        2: "venti",
-        3: "trenta",
-        4: "quaranta",
-        5: "cinquanta",
-        6: "sessanta",
-        7: "settanta",
-        8: "ottanta",
-        9: "novanta"
-      };
-      const hundredsWords = {
-        1: "cento",
-        2: "duecento",
-        3: "trecento",
-        4: "quattrocento",
-        5: "cinquecento",
-        6: "seicento",
-        7: "settecento",
-        8: "ottocento",
-        9: "novecento"
-      };
-
-      if (n <= 9) return units[n];
-      if (n >= 10 && n < 20) return teens[n];
-
-      if (n < 100) {
-        const t = Math.floor(n / 10);
-        const u = n % 10;
-        let tensWord = tensWords[t];
-        if (u === 1 || u === 8) {
-          tensWord = tensWord.slice(0, -1); // venti -> vent / ventuno, ventotto jne
-        }
-        return u === 0 ? tensWord : tensWord + units[u];
-      }
-
-      if (n === 100) return "cento";
-      if (n < 200) return "cento" + italianNumber(n - 100);
-
-      if (n < 1000) {
-        const h = Math.floor(n / 100);
-        const r = n % 100;
-        let prefix = hundredsWords[h];
-        if (r >= 80 && r < 90) {
-          prefix = prefix.replace(/o$/, "");
-        }
-        return r === 0 ? prefix : prefix + italianNumber(r);
-      }
-
-      if (n === 1000) return "mille";
-      if (n < 2000) return "mille" + (n === 1000 ? "" : italianNumber(n - 1000));
-
-      const thousands = Math.floor(n / 1000);
-      const rem = n % 1000;
-      const thousandsPart = italianNumber(thousands) + "mila";
-      return rem === 0 ? thousandsPart : thousandsPart + italianNumber(rem);
-    }
-
     function buildNumberWords() {
       const pool = [];
       for (let i = 1; i <= 100; i++) pool.push(i);
@@ -290,7 +478,7 @@
       });
     }
 
-    // -------- MUUTUJAD --------
+    // ---------- TESTI MUUTUJAD ----------
 
     let currentWords = [];
     let currentWord = null;
@@ -303,7 +491,7 @@
     let recognition = null;
     let speechSupported = false;
 
-    // -------- ABI --------
+    // ---------- ABI FUNKTSIOONID ----------
 
     function normalize(str) {
       return String(str || "")
@@ -403,7 +591,7 @@
         currentWords = buildNumberWords();
         document.getElementById("mode-title").textContent = "Numbrid";
         document.getElementById("instructions").textContent =
-          "Küsitakse 10 juhuslikku numbrit (1–100, sajad, tuhanded). Võid vastata itaalia sõnaga või lihtsalt numbriga.";
+          "Küsitakse juhuslikke numbreid (1–100, sajad, tuhanded). Võid vastata itaalia sõnaga või lihtsalt numbriga.";
       } else if (mode === "days") {
         currentWords = daysMonthsDirs.slice();
         document.getElementById("mode-title").textContent = "Päevad, kuud ja suunad";
@@ -519,7 +707,28 @@
       showModeSelect();
     }
 
-    // -------- NUPUD --------
+    // ---------- NAV (SÕNAVARA vs TEST) ----------
+
+    const btnVocab = document.getElementById("btn-vocab");
+    const btnQuiz = document.getElementById("btn-quiz");
+    const vocabArea = document.getElementById("vocab-area");
+    const quizSection = document.getElementById("quiz-section");
+
+    function showVocab() {
+      vocabArea.style.display = "block";
+      quizSection.style.display = "none";
+    }
+
+    function showQuiz() {
+      vocabArea.style.display = "none";
+      quizSection.style.display = "block";
+      showModeSelect();
+    }
+
+    btnVocab.onclick = showVocab;
+    btnQuiz.onclick = showQuiz;
+
+    // ---------- NUPUD TESTI JAOKS ----------
 
     const modeBodyBtn = document.getElementById("mode-body");
     const modeNumbersBtn = document.getElementById("mode-numbers");
@@ -547,7 +756,58 @@
       }
     });
 
-    // Hääletuvastus ja PWA service worker
+    // ---------- SÕNAVARA TABELITE TÄITMINE ----------
+
+    function fillSimpleTable(tableId, entries) {
+      const tbody = document.querySelector("#" + tableId + " tbody");
+      tbody.innerHTML = "";
+      entries.forEach(function (item) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td>" + item.et + "</td><td>" + item.it + "</td>";
+        tbody.appendChild(tr);
+      });
+    }
+
+    function fillNumbersVocab() {
+      const tbody = document.querySelector("#vocab-numbers tbody");
+      tbody.innerHTML = "";
+
+      const order = [];
+      const added = new Set();
+
+      function addNumber(n) {
+        if (!added.has(n)) {
+          added.add(n);
+          order.push(n);
+        }
+      }
+
+      // 1–20
+      for (let i = 1; i <= 20; i++) addNumber(i);
+      // 20, 25, 30, 35, 40
+      [20, 25, 30, 35, 40].forEach(addNumber);
+      // kümnelised kuni 100 (10,20,...,100)
+      for (let i = 10; i <= 100; i += 10) addNumber(i);
+      // sajad kuni 1000 (100,200,...,1000)
+      for (let i = 100; i <= 1000; i += 100) addNumber(i);
+
+      order.forEach(function (n) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td>" + n + "</td><td>" + italianNumber(n) + "</td>";
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ---------- INIT ----------
+
+    // Täida sõnavara tabelid
+    fillSimpleTable("vocab-weekdays", vocabWeekdays);
+    fillSimpleTable("vocab-months", vocabMonths);
+    fillSimpleTable("vocab-directions", vocabDirections);
+    fillSimpleTable("vocab-body", vocabBody);
+    fillNumbersVocab();
+
+    // Hääletuvastus
     initSpeechRecognition();
     if (!speechSupported) {
       speechStatus.textContent = "Hääletuvastus ei ole selles brauseris toetatud.";
@@ -556,6 +816,10 @@
       speechStatus.textContent = "Saad vajutada „Ütle vastus” ja rääkida itaalia keeles.";
     }
 
+    // Vaikimisi kuvatakse Sõnavara
+    showVocab();
+
+    // Service worker PWA jaoks
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker
