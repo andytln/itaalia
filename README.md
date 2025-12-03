@@ -1,2 +1,2 @@
 # itaalia
-itaalia keele s
+itaalia keele sõnavara
