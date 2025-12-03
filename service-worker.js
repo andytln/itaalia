@@ -1,56 +1,28 @@
-// UUS CACHE NIMI – iga versiooni puhul vaheta nt italia-quiz-v3, v4 jne
-const CACHE_NAME = "italia-quiz-v2";
+// See service worker teeb ainult ühte asja:
+// kustutab kõik cache'id ja unregister'ib iseenda.
+// Pärast seda ei ole sul enam PWA cache'i üldse.
 
-const ASSETS = [
-  "./",
-  "index.html",
-  "manifest.json",
-  "icon-192.png",
-  "icon-512.png"
-];
-
-// Install – lae failid cache'i ja võta kohe ohjad üle
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
-  );
+self.addEventListener("install", (event) => {
+  // aktiveeru kohe
   self.skipWaiting();
 });
 
-// Activate – kustuta VANAD cache'id
-self.addEventListener("activate", event => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      )
+    // 1. Kustuta kõik cache'id
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => caches.delete(key)))
+    ).then(() =>
+      // 2. Unregisteri iseennast
+      self.registration.unregister()
+    ).then(() =>
+      // 3. Lae kõik avatud lehed uuesti (ilma SW-ta)
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => client.navigate(client.url));
+      })
     )
   );
-  self.clients.claim();
 });
 
-// Fetch – PROOVI KÕIGEPEALT VÕRGUST, kui ei saa, võta cache'ist
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Salvesta värske versioon cache'i
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
-        });
-        return response;
-      })
-      .catch(() => caches.match(event.request))
-  );
-});
-
-});
-
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(resp => resp || fetch(event.request))
-  );
-});
+// NB! ÜHTEGI fetch-handlerit SIIN EI OLE.
+// Pärast aktiveerumist ei jää ühtegi service workerit alles.
