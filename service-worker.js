@@ -1,0 +1,1 @@
+const CACHE_NAME="es-ope-app-v1";
