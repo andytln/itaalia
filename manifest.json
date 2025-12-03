@@ -1,6 +1,6 @@
 {
-  "name": "Hispaania õppeäpp",
-  "short_name": "ES Õpik",
+  "name": "Itaalia õppeäpp",
+  "short_name": "Katu Õpik",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
