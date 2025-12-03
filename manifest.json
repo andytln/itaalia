@@ -1,12 +1,20 @@
 {
-  "name": "Itaalia õppeäpp",
-  "short_name": "Katu Õpik",
-  "start_url": "./index.html",
+  "name": "Itaalia keel – sõnavara äpp",
+  "short_name": "Italia õpe",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "icons": [
-    {"src":"icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"icon-512.png","sizes":"512x512","type":"image/png"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
