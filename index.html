@@ -15,7 +15,7 @@
   <link rel="manifest" href="manifest.json" />
 
   <style>
-    /* Itaalia lipu taust: roheline - valge - punane vertikaalribad */
+    /* Itaalia lipu taust: roheline - valge - punane vertikaalselt */
     html, body {
       height: 100%;
       margin: 0;
@@ -42,6 +42,8 @@
       border: 1px solid #ccc;
       border-radius: 12px;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      max-height: 100%;
+      overflow-y: auto; /* sisu kerib, raam jääb paigale */
     }
 
     h1, h2, h3, h4 {
@@ -89,6 +91,7 @@
     th {
       background-color: #f0f0f0;
     }
+
     /* Testi osa stiilid */
     #quiz-area {
       margin-top: 20px;
@@ -135,6 +138,16 @@
       color: #555;
       margin-top: 6px;
     }
+
+    /* Sõnavara valiku nuppude rida jääb kerimisel nähtavale */
+    #vocab-buttons {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.96);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -151,7 +164,7 @@
     <div id="vocab-area" style="display:none;">
       <h2>Sõnavara</h2>
 
-      <div id="vocab-buttons" style="text-align:center; margin-bottom:10px;">
+      <div id="vocab-buttons" style="text-align:center;">
         <button id="vocab-numbers-btn">Numbrid</button>
         <button id="vocab-days-btn">Päevad, kuud ja suunad</button>
         <button id="vocab-body-btn">Kehaosad</button>
@@ -255,7 +268,7 @@
         const u = n % 10;
         let tensWord = tensWords[t];
         if (u === 1 || u === 8) {
-          tensWord = tensWord.slice(0, -1);
+          tensWord = tensWord.slice(0, -1); // venti -> ventuno / ventotto jne
         }
         return u === 0 ? tensWord : tensWord + units[u];
       }
@@ -282,7 +295,7 @@
       return rem === 0 ? thousandsPart : thousandsPart + italianNumber(rem);
     }
 
-    // ---------- SÕNAVARA ANDMED ----------
+    // ---------- SÕNAVARA ANDMED (VAADATAKS) ----------
 
     const vocabWeekdays = [
       { et: "esmaspäev", it: "lunedì" },
@@ -322,6 +335,7 @@
       { et: "tagasi", it: "indietro" }
     ];
 
+    /* Sõnavara – kehaosad, tuntumad slängid mainitud sulgudes / lisatud */
     const vocabBody = [
       { et: "juuksed", it: "i capelli" },
       { et: "otsmik", it: "la fronte" },
@@ -344,51 +358,80 @@
       { et: "õlad", it: "le spalle" },
       { et: "rindkere", it: "il petto" },
       { et: "selg", it: "la schiena" },
-      { et: "kõht", it: "la pancia" },
-      { et: "meeste suguelund", it: "il pene" },
-      { et: "naiste suguelund", it: "la vagina" },
-      { et: "puus", it: "il fianco" },
+      { et: "kõht", it: "la pancia (ka: la panzetta)" },
+      { et: "meeste suguelund", it: "il pene (ka: il pisello)" },
+      { et: "naiste suguelund", it: "la vagina (ka: la figa / la patatina)" },
+      { et: "puus", it: "il fianco / l'anca" },
       { et: "käsi (õlast randmeni)", it: "il braccio" },
       { et: "käsi (randmest allpool)", it: "la mano" },
       { et: "sõrm", it: "il dito" },
       { et: "sõrmed", it: "le dita" },
-      { et: "tagumik", it: "il sedere" },
+      { et: "tagumik", it: "il sedere (ka: il culo, lato B)" },
       { et: "jalg", it: "la gamba" },
       { et: "põlv", it: "il ginocchio" },
       { et: "pöid (jalg)", it: "il piede" },
       { et: "varvas", it: "il dito del piede" }
     ];
 
-    // ---------- TESTI ANDMED ----------
+    // ---------- TESTI ANDMED (rohkem variante + slängi) ----------
 
     const bodyWords = [
       { et: "pea", it: ["testa", "la testa"] },
-      { et: "silm", it: ["occhio", "l'occhio"] },
-      { et: "nina", it: ["naso", "il naso"] },
-      { et: "suu", it: ["bocca", "la bocca"] },
-      { et: "hammas", it: ["dente", "il dente"] },
-      { et: "keel", it: ["lingua", "la lingua"] },
-      { et: "kõrv", it: ["orecchio", "l'orecchio"] },
+      { et: "silm", it: ["occhio", "l'occhio", "occhietto"] },
+      { et: "nina", it: ["naso", "il naso", "nasino"] },
+      { et: "suu", it: ["bocca", "la bocca", "boccaccia"] },
+      { et: "hammas", it: ["dente", "il dente", "dentino"] },
+      { et: "keel", it: ["lingua", "la lingua", "linguetta"] },
+      { et: "kõrv", it: ["orecchio", "l'orecchio", "orecchietta"] },
       { et: "kael", it: ["collo", "il collo"] },
       { et: "õlg", it: ["spalla", "la spalla"] },
-      { et: "käsi (randmest allpool)", it: ["mano", "la mano"] },
-      { et: "sõrm", it: ["dito", "il dito"] },
-      { et: "rind", it: ["petto", "il petto", "torace", "il torace"] },
-      { et: "selg", it: ["schiena", "la schiena"] },
-      { et: "kõht", it: ["pancia", "la pancia", "stomaco", "lo stomaco"] },
-      { et: "jalg", it: ["gamba", "la gamba"] },
+      { et: "käsi (randmest allpool)", it: ["mano", "la mano", "manina"] },
+      { et: "sõrm", it: ["dito", "il dito", "ditino"] },
+      { et: "rind", it: ["petto", "il petto", "torace", "il torace", "tetta", "tette", "seno"] },
+      { et: "selg", it: ["schiena", "la schiena", "schienina"] },
+      { et: "kõht", it: ["pancia", "la pancia", "pancetta", "stomaco", "lo stomaco"] },
+      { et: "jalg", it: ["gamba", "la gamba", "gambetta"] },
       { et: "põlv", it: ["ginocchio", "il ginocchio"] },
       { et: "varvas", it: ["dito del piede", "il dito del piede"] },
-      { et: "tagumik", it: ["sedere", "il sedere", "natiche", "le natiche", "glutei"] },
-      { et: "naeratus", it: ["sorriso", "il sorriso"] },
+      {
+        et: "tagumik",
+        it: [
+          "sedere", "il sedere",
+          "natiche", "le natiche",
+          "glutei",
+          "culo", "il culo",
+          "lato b", "lato B"
+        ]
+      },
+      { et: "naeratus", it: ["sorriso", "il sorriso", "sorrisino"] },
       { et: "ripsmed", it: ["ciglia", "le ciglia"] },
-      { et: "huuled", it: ["labbra", "le labbra"] },
+      {
+        et: "huuled",
+        it: ["labbra", "le labbra", "labbro", "il labbro", "labbrotti"]
+      },
       { et: "põsk", it: ["guancia", "la guancia"] },
       { et: "põsed", it: ["guance", "le guance"] },
       { et: "kulm", it: ["sopracciglio", "il sopracciglio"] },
       { et: "kulmud", it: ["sopracciglia", "le sopracciglia"] },
-      { et: "meeste suguelund", it: ["pene", "il pene", "pisello"] },
-      { et: "naiste suguelund", it: ["vagina", "la vagina", "vulva", "la vulva"] }
+      {
+        et: "meeste suguelund",
+        it: [
+          "pene", "il pene",
+          "pisello", "il pisello",
+          "uccello", "l'uccello",
+          "coso", "il coso",
+          "membro", "il membro"
+        ]
+      },
+      {
+        et: "naiste suguelund",
+        it: [
+          "vagina", "la vagina",
+          "vulva", "la vulva",
+          "figa", "fica",
+          "patatina", "la patatina"
+        ]
+      }
     ];
 
     const daysMonthsDirs = [
@@ -414,12 +457,12 @@
       { et: "detsember", it: ["dicembre", "il mese di dicembre"] },
 
       { et: "põhi", it: ["nord", "il nord"] },
-      { et: "lõuna", it: ["sud", "il sud"] },
+      { et: "lõuna", it: ["sud", "il sud", "mezzogiorno"] },
       { et: "ida", it: ["est", "l'est"] },
       { et: "lääs", it: ["ovest", "l'ovest"] },
 
-      { et: "üles", it: ["su", "verso l'alto"] },
-      { et: "alla", it: ["giù", "verso il basso"] },
+      { et: "üles", it: ["su", "in su", "verso l'alto"] },
+      { et: "alla", it: ["giù", "in giù", "verso il basso"] },
       { et: "vasakule", it: ["a sinistra", "sinistra"] },
       { et: "paremale", it: ["a destra", "destra"] },
       { et: "edasi", it: ["avanti", "dritto", "vai avanti"] },
@@ -437,9 +480,13 @@
 
       return selected.map(function (n) {
         const word = italianNumber(n);
+        const forms = [word, String(n)];
+        if (n === 1) {
+          forms.push("un", "una");
+        }
         return {
           et: String(n),
-          it: [word, String(n)]
+          it: forms
         };
       });
     }
@@ -557,12 +604,12 @@
         currentWords = buildNumberWords();
         document.getElementById("mode-title").textContent = "Numbrid";
         document.getElementById("instructions").textContent =
-          "Küsitakse juhuslikke numbreid (1–100, sajad, tuhanded). Võid vastata itaalia sõnaga või lihtsalt numbriga.";
+          "Küsitakse juhuslikke numbreid (1–100, sajad, tuhanded). Võid vastata itaalia sõnaga või lihtsalt numbriga (nt 1 / uno / un / una).";
       } else if (mode === "days") {
         currentWords = daysMonthsDirs.slice();
         document.getElementById("mode-title").textContent = "Päevad, kuud ja suunad";
         document.getElementById("instructions").textContent =
-          "Küsitakse nädalapäevi, 12 kuud, ilmakaari ja suundi (üles, alla, vasakule, paremale, edasi, tagasi). Kirjuta itaaliakeelne vastus.";
+          "Küsitakse nädalapäevi, 12 kuud, ilmakaari ja suundi (üles, alla, vasakule, paremale, edasi, tagasi).";
       }
 
       questionLimit = Math.min(MAX_QUESTIONS, currentWords.length);
@@ -702,6 +749,12 @@
     btnVocab.onclick = showVocab;
     btnQuiz.onclick = showQuiz;
 
+    function goBackFromVocab() {
+      showInitial();
+      document.querySelector('.app').scrollTop = 0;
+      window.scrollTo(0, 0);
+    }
+
     // ---------- SÕNAVARA BLOKKIDE NUPUD ----------
 
     const vocabNumbersBtn = document.getElementById("vocab-numbers-btn");
@@ -736,7 +789,11 @@
           html += "<tr><td>" + n + "</td><td>" + italianNumber(n) + "</td></tr>";
         });
 
-        html += "</tbody></table></div>";
+        html += "</tbody></table>";
+        html += "<div style='text-align:center; margin-top:12px;'>";
+        html += "<button type='button' onclick='goBackFromVocab()'>Tagasi</button>";
+        html += "</div>";
+        html += "</div>";
       } else if (category === "days") {
         html += "<div class='vocab-block'>";
         html += "<h3>Päevad, kuud ja suunad</h3>";
@@ -762,6 +819,10 @@
         });
         html += "</tbody></table>";
 
+        html += "<div style='text-align:center; margin-top:12px;'>";
+        html += "<button type='button' onclick='goBackFromVocab()'>Tagasi</button>";
+        html += "</div>";
+
         html += "</div>";
       } else if (category === "body") {
         html += "<div class='vocab-block'>";
@@ -770,7 +831,11 @@
         vocabBody.forEach(function (item) {
           html += "<tr><td>" + item.et + "</td><td>" + item.it + "</td></tr>";
         });
-        html += "</tbody></table></div>";
+        html += "</tbody></table>";
+        html += "<div style='text-align:center; margin-top:12px;'>";
+        html += "<button type='button' onclick='goBackFromVocab()'>Tagasi</button>";
+        html += "</div>";
+        html += "</div>";
       }
 
       listDiv.innerHTML = html;
@@ -779,7 +844,7 @@
     vocabNumbersBtn.onclick = function () { showVocabCategory("numbers"); };
     vocabDaysBtn.onclick = function () { showVocabCategory("days"); };
     vocabBodyBtn.onclick = function () { showVocabCategory("body"); };
-    vocabBackBtn.onclick = function () { showInitial(); };
+    vocabBackBtn.onclick = goBackFromVocab;
 
     // ---------- NUPUD TESTI JAOKS ----------
 
