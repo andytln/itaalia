@@ -130,6 +130,11 @@
     #last-result {
       margin-top: 20px;
     }
+    .list-note {
+      font-size: 14px;
+      color: #555;
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
@@ -143,77 +148,19 @@
     </div>
 
     <!-- SÕNAVARA OSA -->
-    <div id="vocab-area">
+    <div id="vocab-area" style="display:none;">
       <h2>Sõnavara</h2>
 
-      <!-- Numbrid -->
-      <div class="vocab-block">
-        <h3>Numbrid</h3>
-        <p style="text-align:center;">
-          1–20, seejärel valikud (20, 25, 30, 35, 40), seejärel kümnelised kuni 100 ning lõpuks sajad kuni 1000.
-        </p>
-        <table id="vocab-numbers">
-          <thead>
-            <tr>
-              <th>Eesti (number)</th>
-              <th>Itaalia (sõnana)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div id="vocab-buttons" style="text-align:center; margin-bottom:10px;">
+        <button id="vocab-numbers-btn">Numbrid</button>
+        <button id="vocab-days-btn">Päevad, kuud ja suunad</button>
+        <button id="vocab-body-btn">Kehaosad</button>
+        <button id="vocab-back-btn">Tagasi</button>
       </div>
-
-      <!-- Päevad, kuud, suunad -->
-      <div class="vocab-block">
-        <h3>Päevad, kuud ja suunad</h3>
-
-        <h4>Nädalapäevad (E–P)</h4>
-        <table id="vocab-weekdays">
-          <thead>
-            <tr>
-              <th>Eesti</th>
-              <th>Itaalia</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-
-        <h4>Kuud (Jaanuar – Detsember)</h4>
-        <table id="vocab-months">
-          <thead>
-            <tr>
-              <th>Eesti</th>
-              <th>Itaalia</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-
-        <h4>Suunad ja liikumine</h4>
-        <table id="vocab-directions">
-          <thead>
-            <tr>
-              <th>Eesti</th>
-              <th>Itaalia</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div id="vocab-note" class="list-note">
+        Vali üks kategooria, et näha selle sõnu, mida hetkel saab kontrollida.
       </div>
-
-      <!-- Kehaosad -->
-      <div class="vocab-block">
-        <h3>Kehaosad (juustest varvasteni)</h3>
-        <table id="vocab-body">
-          <thead>
-            <tr>
-              <th>Eesti</th>
-              <th>Itaalia</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <div id="vocab-list"></div>
     </div>
 
     <!-- TESTI OSA -->
@@ -726,16 +673,24 @@
       showModeSelect();
     }
 
-    // ---------- NAV (SÕNAVARA vs TEST) ----------
+    // ---------- PEAVAATE / NAV FUNKTSIOONID ----------
 
     const btnVocab = document.getElementById("btn-vocab");
     const btnQuiz = document.getElementById("btn-quiz");
     const vocabArea = document.getElementById("vocab-area");
     const quizSection = document.getElementById("quiz-section");
 
+    function showInitial() {
+      vocabArea.style.display = "none";
+      quizSection.style.display = "none";
+    }
+
     function showVocab() {
       vocabArea.style.display = "block";
       quizSection.style.display = "none";
+      document.getElementById("vocab-note").textContent =
+        "Vali üks kategooria, et näha selle sõnu, mida hetkel saab kontrollida.";
+      document.getElementById("vocab-list").innerHTML = "";
     }
 
     function showQuiz() {
@@ -746,6 +701,85 @@
 
     btnVocab.onclick = showVocab;
     btnQuiz.onclick = showQuiz;
+
+    // ---------- SÕNAVARA BLOKKIDE NUPUD ----------
+
+    const vocabNumbersBtn = document.getElementById("vocab-numbers-btn");
+    const vocabDaysBtn = document.getElementById("vocab-days-btn");
+    const vocabBodyBtn = document.getElementById("vocab-body-btn");
+    const vocabBackBtn = document.getElementById("vocab-back-btn");
+
+    function showVocabCategory(category) {
+      const listDiv = document.getElementById("vocab-list");
+      let html = "";
+
+      if (category === "numbers") {
+        html += "<div class='vocab-block'>";
+        html += "<h3>Numbrid</h3>";
+        html += "<p style='text-align:center;'>1–20, seejärel 20, 25, 30, 35, 40, kümnelised kuni 100 ning sajad kuni 1000.</p>";
+        html += "<table><thead><tr><th>Eesti (number)</th><th>Itaalia (sõnana)</th></tr></thead><tbody>";
+
+        const order = [];
+        const added = new Set();
+        function addNumber(n) {
+          if (!added.has(n)) {
+            added.add(n);
+            order.push(n);
+          }
+        }
+        for (let i = 1; i <= 20; i++) addNumber(i);
+        [20, 25, 30, 35, 40].forEach(addNumber);
+        for (let i = 10; i <= 100; i += 10) addNumber(i);
+        for (let i = 100; i <= 1000; i += 100) addNumber(i);
+
+        order.forEach(function (n) {
+          html += "<tr><td>" + n + "</td><td>" + italianNumber(n) + "</td></tr>";
+        });
+
+        html += "</tbody></table></div>";
+      } else if (category === "days") {
+        html += "<div class='vocab-block'>";
+        html += "<h3>Päevad, kuud ja suunad</h3>";
+
+        html += "<h4>Nädalapäevad (E–P)</h4>";
+        html += "<table><thead><tr><th>Eesti</th><th>Itaalia</th></tr></thead><tbody>";
+        vocabWeekdays.forEach(function (item) {
+          html += "<tr><td>" + item.et + "</td><td>" + item.it + "</td></tr>";
+        });
+        html += "</tbody></table>";
+
+        html += "<h4>Kuud (Jaanuar – Detsember)</h4>";
+        html += "<table><thead><tr><th>Eesti</th><th>Itaalia</th></tr></thead><tbody>";
+        vocabMonths.forEach(function (item) {
+          html += "<tr><td>" + item.et + "</td><td>" + item.it + "</td></tr>";
+        });
+        html += "</tbody></table>";
+
+        html += "<h4>Suunad ja liikumine</h4>";
+        html += "<table><thead><tr><th>Eesti</th><th>Itaalia</th></tr></thead><tbody>";
+        vocabDirections.forEach(function (item) {
+          html += "<tr><td>" + item.et + "</td><td>" + item.it + "</td></tr>";
+        });
+        html += "</tbody></table>";
+
+        html += "</div>";
+      } else if (category === "body") {
+        html += "<div class='vocab-block'>";
+        html += "<h3>Kehaosad (juustest varvasteni)</h3>";
+        html += "<table><thead><tr><th>Eesti</th><th>Itaalia</th></tr></thead><tbody>";
+        vocabBody.forEach(function (item) {
+          html += "<tr><td>" + item.et + "</td><td>" + item.it + "</td></tr>";
+        });
+        html += "</tbody></table></div>";
+      }
+
+      listDiv.innerHTML = html;
+    }
+
+    vocabNumbersBtn.onclick = function () { showVocabCategory("numbers"); };
+    vocabDaysBtn.onclick = function () { showVocabCategory("days"); };
+    vocabBodyBtn.onclick = function () { showVocabCategory("body"); };
+    vocabBackBtn.onclick = function () { showInitial(); };
 
     // ---------- NUPUD TESTI JAOKS ----------
 
@@ -775,61 +809,18 @@
       }
     });
 
-    // ---------- SÕNAVARA TABELITE TÄITMINE ----------
-
-    function fillSimpleTable(tableId, entries) {
-      const tbody = document.querySelector("#" + tableId + " tbody");
-      tbody.innerHTML = "";
-      entries.forEach(function (item) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = "<td>" + item.et + "</td><td>" + item.it + "</td>";
-        tbody.appendChild(tr);
-      });
-    }
-
-    function fillNumbersVocab() {
-      const tbody = document.querySelector("#vocab-numbers tbody");
-      tbody.innerHTML = "";
-
-      const order = [];
-      const added = new Set();
-
-      function addNumber(n) {
-        if (!added.has(n)) {
-          added.add(n);
-          order.push(n);
-        }
-      }
-
-      for (let i = 1; i <= 20; i++) addNumber(i);
-      [20, 25, 30, 35, 40].forEach(addNumber);
-      for (let i = 10; i <= 100; i += 10) addNumber(i);
-      for (let i = 100; i <= 1000; i += 100) addNumber(i);
-
-      order.forEach(function (n) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = "<td>" + n + "</td><td>" + italianNumber(n) + "</td>";
-        tbody.appendChild(tr);
-      });
-    }
-
     // ---------- INIT ----------
-
-    fillSimpleTable("vocab-weekdays", vocabWeekdays);
-    fillSimpleTable("vocab-months", vocabMonths);
-    fillSimpleTable("vocab-directions", vocabDirections);
-    fillSimpleTable("vocab-body", vocabBody);
-    fillNumbersVocab();
 
     initSpeechRecognition();
     if (!speechSupported) {
       speechStatus.textContent = "Hääletuvastus ei ole selles brauseris toetatud.";
-      voiceBtn.disabled = true;
+      if (voiceBtn) voiceBtn.disabled = true;
     } else {
       speechStatus.textContent = "Saad vajutada „Ütle vastus” ja rääkida itaalia keeles.";
     }
 
-    showVocab();
+    // algseis – ainult ülemine valik (Sõnavara / Testi oskuseid)
+    showInitial();
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
