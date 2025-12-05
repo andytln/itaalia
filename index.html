@@ -15,14 +15,35 @@
   <link rel="manifest" href="manifest.json" />
 
   <style>
+    /* Itaalia lipu taust: roheline - valge - punane vertikaalribad */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
     body {
+      background: linear-gradient(
+        to right,
+        #009246 0%,   #009246 33%,
+        #ffffff 33%,  #ffffff 66%,
+        #ce2b37 66%,  #ce2b37 100%
+      );
       font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
+    }
+    .app {
+      background: rgba(255, 255, 255, 0.96);
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 24px;
       border: 1px solid #ccc;
       border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
     }
+
     h1, h2, h3, h4 {
       text-align: center;
     }
@@ -112,136 +133,138 @@
   </style>
 </head>
 <body>
-  <h1>Itaalia keel – sõnavara ja test</h1>
+  <div class="app">
+    <h1>Itaalia keel – sõnavara ja test</h1>
 
-  <!-- ÜLEMINE VALIK: Sõnavara vs Test -->
-  <div id="main-nav">
-    <button id="btn-vocab" type="button">Sõnavara</button>
-    <button id="btn-quiz" type="button">Testi oskuseid</button>
-  </div>
-
-  <!-- SÕNAVARA OSA -->
-  <div id="vocab-area">
-    <h2>Sõnavara</h2>
-
-    <!-- Numbrid -->
-    <div class="vocab-block">
-      <h3>Numbrid</h3>
-      <p style="text-align:center;">
-        1–20, seejärel valikud (20, 25, 30, 35, 40), seejärel kümnelised kuni 100 ning lõpuks sajad kuni 1000.
-      </p>
-      <table id="vocab-numbers">
-        <thead>
-          <tr>
-            <th>Eesti (number)</th>
-            <th>Itaalia (sõnana)</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <!-- ÜLEMINE VALIK: Sõnavara vs Test -->
+    <div id="main-nav">
+      <button id="btn-vocab" type="button">Sõnavara</button>
+      <button id="btn-quiz" type="button">Testi oskuseid</button>
     </div>
 
-    <!-- Päevad, kuud, suunad -->
-    <div class="vocab-block">
-      <h3>Päevad, kuud ja suunad</h3>
+    <!-- SÕNAVARA OSA -->
+    <div id="vocab-area">
+      <h2>Sõnavara</h2>
 
-      <h4>Nädalapäevad (E–P)</h4>
-      <table id="vocab-weekdays">
-        <thead>
-          <tr>
-            <th>Eesti</th>
-            <th>Itaalia</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <!-- Numbrid -->
+      <div class="vocab-block">
+        <h3>Numbrid</h3>
+        <p style="text-align:center;">
+          1–20, seejärel valikud (20, 25, 30, 35, 40), seejärel kümnelised kuni 100 ning lõpuks sajad kuni 1000.
+        </p>
+        <table id="vocab-numbers">
+          <thead>
+            <tr>
+              <th>Eesti (number)</th>
+              <th>Itaalia (sõnana)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-      <h4>Kuud (Jaanuar – Detsember)</h4>
-      <table id="vocab-months">
-        <thead>
-          <tr>
-            <th>Eesti</th>
-            <th>Itaalia</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <!-- Päevad, kuud, suunad -->
+      <div class="vocab-block">
+        <h3>Päevad, kuud ja suunad</h3>
 
-      <h4>Suunad ja liikumine</h4>
-      <table id="vocab-directions">
-        <thead>
-          <tr>
-            <th>Eesti</th>
-            <th>Itaalia</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+        <h4>Nädalapäevad (E–P)</h4>
+        <table id="vocab-weekdays">
+          <thead>
+            <tr>
+              <th>Eesti</th>
+              <th>Itaalia</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
 
-    <!-- Kehaosad -->
-    <div class="vocab-block">
-      <h3>Kehaosad (juustest varvasteni)</h3>
-      <table id="vocab-body">
-        <thead>
-          <tr>
-            <th>Eesti</th>
-            <th>Itaalia</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
+        <h4>Kuud (Jaanuar – Detsember)</h4>
+        <table id="vocab-months">
+          <thead>
+            <tr>
+              <th>Eesti</th>
+              <th>Itaalia</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
 
-  <!-- TESTI OSA (sama loogika nagu enne, lihtsalt oma blokis) -->
-  <div id="quiz-section" style="display:none;">
+        <h4>Suunad ja liikumine</h4>
+        <table id="vocab-directions">
+          <thead>
+            <tr>
+              <th>Eesti</th>
+              <th>Itaalia</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-    <!-- Blokivalik testimiseks -->
-    <div id="mode-select">
-      <h2>Testi oskuseid</h2>
-      <p style="text-align:center;">Vali blokk, mida harjutada:</p>
-      <div style="text-align:center;">
-        <button id="mode-body">Kehaosad</button>
-        <button id="mode-numbers">Numbrid</button>
-        <button id="mode-days">Päevad, kuud ja suunad</button>
+      <!-- Kehaosad -->
+      <div class="vocab-block">
+        <h3>Kehaosad (juustest varvasteni)</h3>
+        <table id="vocab-body">
+          <thead>
+            <tr>
+              <th>Eesti</th>
+              <th>Itaalia</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Päris testimine -->
-    <div id="quiz-area" style="display:none;">
-      <div id="top-bar">
-        <button id="restart-btn">Kokkuvõte</button>
-        <div id="top-bar-title"><span id="mode-title"></span></div>
-        <button id="cancel-btn">Katkesta</button>
+    <!-- TESTI OSA -->
+    <div id="quiz-section" style="display:none;">
+
+      <!-- Blokivalik testimiseks -->
+      <div id="mode-select">
+        <h2>Testi oskuseid</h2>
+        <p style="text-align:center;">Vali blokk, mida harjutada:</p>
+        <div style="text-align:center;">
+          <button id="mode-body">Kehaosad</button>
+          <button id="mode-numbers">Numbrid</button>
+          <button id="mode-days">Päevad, kuud ja suunad</button>
+        </div>
       </div>
 
-      <p id="instructions"></p>
+      <!-- Päris testimine -->
+      <div id="quiz-area" style="display:none;">
+        <div id="top-bar">
+          <button id="restart-btn">Kokkuvõte</button>
+          <div id="top-bar-title"><span id="mode-title"></span></div>
+          <button id="cancel-btn">Katkesta</button>
+        </div>
 
-      <div id="estonian-word">Vajuta „Järgmine”</div>
+        <p id="instructions"></p>
 
-      <label for="answer-input">
-        Sinu vastus itaalia keeles:
-      </label>
-      <input type="text" id="answer-input" autocomplete="off" />
+        <div id="estonian-word">Vajuta „Järgmine”</div>
 
-      <div>
-        <button id="voice-btn" type="button">🎤 Ütle vastus</button>
-        <span id="speech-status"></span>
+        <label for="answer-input">
+          Sinu vastus itaalia keeles:
+        </label>
+        <input type="text" id="answer-input" autocomplete="off" />
+
+        <div>
+          <button id="voice-btn" type="button">🎤 Ütle vastus</button>
+          <span id="speech-status"></span>
+        </div>
+
+        <br />
+
+        <button id="check-btn">Kontrolli</button>
+        <button id="next-btn">Järgmine</button>
+
+        <div id="feedback"></div>
+
+        <div id="last-result"></div>
       </div>
 
-      <br />
-
-      <button id="check-btn">Kontrolli</button>
-      <button id="next-btn">Järgmine</button>
-
-      <div id="feedback"></div>
-
-      <div id="last-result"></div>
+      <!-- Testi kokkuvõte -->
+      <div id="summary"></div>
     </div>
-
-    <!-- Testi kokkuvõte -->
-    <div id="summary"></div>
   </div>
 
   <script>
@@ -285,7 +308,7 @@
         const u = n % 10;
         let tensWord = tensWords[t];
         if (u === 1 || u === 8) {
-          tensWord = tensWord.slice(0, -1); // venti -> ventuno/ventotto jne
+          tensWord = tensWord.slice(0, -1);
         }
         return u === 0 ? tensWord : tensWord + units[u];
       }
@@ -314,7 +337,6 @@
 
     // ---------- SÕNAVARA ANDMED ----------
 
-    // Sõnavara – nädalapäevad
     const vocabWeekdays = [
       { et: "esmaspäev", it: "lunedì" },
       { et: "teisipäev", it: "martedì" },
@@ -325,7 +347,6 @@
       { et: "pühapäev", it: "domenica" }
     ];
 
-    // Sõnavara – kuud
     const vocabMonths = [
       { et: "jaanuar", it: "gennaio" },
       { et: "veebruar", it: "febbraio" },
@@ -341,7 +362,6 @@
       { et: "detsember", it: "dicembre" }
     ];
 
-    // Sõnavara – suunad
     const vocabDirections = [
       { et: "põhi", it: "nord" },
       { et: "lõuna", it: "sud" },
@@ -355,7 +375,6 @@
       { et: "tagasi", it: "indietro" }
     ];
 
-    // Sõnavara – kehaosad (juustest varvasteni)
     const vocabBody = [
       { et: "juuksed", it: "i capelli" },
       { et: "otsmik", it: "la fronte" },
@@ -393,7 +412,7 @@
       { et: "varvas", it: "il dito del piede" }
     ];
 
-    // ---------- TESTI ANDMED (SAMA LOOGIKA NAGU VAREM) ----------
+    // ---------- TESTI ANDMED ----------
 
     const bodyWords = [
       { et: "pea", it: ["testa", "la testa"] },
@@ -485,7 +504,7 @@
     let usedIndices = [];
     let results = [];
     let currentMode = null;
-    let lastResult = null;        // ainult VIIMANE küsimus
+    let lastResult = null;
     const MAX_QUESTIONS = 15;
     let questionLimit = 0;
     let recognition = null;
@@ -782,13 +801,9 @@
         }
       }
 
-      // 1–20
       for (let i = 1; i <= 20; i++) addNumber(i);
-      // 20, 25, 30, 35, 40
       [20, 25, 30, 35, 40].forEach(addNumber);
-      // kümnelised kuni 100 (10,20,...,100)
       for (let i = 10; i <= 100; i += 10) addNumber(i);
-      // sajad kuni 1000 (100,200,...,1000)
       for (let i = 100; i <= 1000; i += 100) addNumber(i);
 
       order.forEach(function (n) {
@@ -800,14 +815,12 @@
 
     // ---------- INIT ----------
 
-    // Täida sõnavara tabelid
     fillSimpleTable("vocab-weekdays", vocabWeekdays);
     fillSimpleTable("vocab-months", vocabMonths);
     fillSimpleTable("vocab-directions", vocabDirections);
     fillSimpleTable("vocab-body", vocabBody);
     fillNumbersVocab();
 
-    // Hääletuvastus
     initSpeechRecognition();
     if (!speechSupported) {
       speechStatus.textContent = "Hääletuvastus ei ole selles brauseris toetatud.";
@@ -816,10 +829,8 @@
       speechStatus.textContent = "Saad vajutada „Ütle vastus” ja rääkida itaalia keeles.";
     }
 
-    // Vaikimisi kuvatakse Sõnavara
     showVocab();
 
-    // Service worker PWA jaoks
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker
